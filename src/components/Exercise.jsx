@@ -28,7 +28,6 @@ function Exercise() {
   // Number of lives left
   const [lives, setLives] = useState(3);
 
-  // Here we define which exercise we are doing: slice(0, 3) would be unison, m2, M2, slice none would be all intervals
   const intervals = intervalsAll.slice(0, 13);
 
   const [nota, setNota] = useState(null);
@@ -38,7 +37,9 @@ function Exercise() {
 
   useEffect(() => {
     const currentExerciseSet = [];
-    for (i = 0; i < 10; i++) {}
+    for (let i = 0; i < 10; i++) {
+      // Here we define which exercise we are doing: slice(0, 3) would be unison, m2, M2, slice none would be all intervals
+    }
   }, []);
 
   return (
