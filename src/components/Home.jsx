@@ -1,8 +1,8 @@
-import React from "react";
+import { React } from "react";
 
 function Home() {
   return (
-    <div style={{ color: "white" }}>
+    <div>
       <h3>Home</h3>
     </div>
   );

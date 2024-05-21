@@ -1,15 +1,26 @@
-import * as Tone from "tone";
-import { React, useContext, useState } from "react";
+import { React, useContext, useState, useEffect } from "react";
 import { MainContext } from "../context/context";
+import ProgressBar from "./ProgressBar";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Exercise() {
   const {
     notes,
+    exercises,
     intervalsAll,
     handleResponse,
     playIntervalSample,
     handlePlay,
+    instruments,
   } = useContext(MainContext);
+
+  const navigate = useNavigate();
+  const { type, exercise } = useParams();
+
+  useEffect(() => {
+    const currentExercise = exercises[type].find((e) => e.title == exercise);
+    console.log(currentExercise);
+  }, [type, exercise]);
 
   // Counter for which question of the X total (10)
   const [count, setCount] = useState(1);
@@ -17,67 +28,48 @@ function Exercise() {
   // Number of lives left
   const [lives, setLives] = useState(3);
 
-  const [feedback, setFeedback] = useState("");
-
   // Here we define which exercise we are doing: slice(0, 3) would be unison, m2, M2, slice none would be all intervals
   const intervals = intervalsAll.slice(0, 13);
 
   const [nota, setNota] = useState(null);
   const [interval, setInterval] = useState(null);
 
-  // let nota;
-  // let interval;
+  // Here we create the list of 10 concrete exercises based on 'type' and 'exercise' called currentExerciseSet
 
-  // useEffect(() => {
-  //   interval = getRandom(intervals);
-  //   console.log("Interval: " + interval[1]);
-  //   nota = getRandom(notes, interval[0]);
-  //   console.log(`Notes: ${nota[1]} ${notes[nota[0] + interval[0]]}`);
-  // }, [nota, notes, interval, intervals]);
+  useEffect(() => {
+    const currentExerciseSet = [];
+    for (i = 0; i < 10; i++) {}
+  }, []);
 
   return (
     <div>
       <div className="d-flex align-items-center mb-5">
-        <div
-          style={{
-            border: "solid 1px black",
-            width: "85%",
-            borderRadius: "3px",
-          }}
-          className="progress"
-          role="progressbar"
-          aria-label="Success example"
-          aria-valuenow="25"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >
-          <div
-            className="progress-bar bg-success"
-            style={{
-              width: `${count * 10}%`,
-            }}
-          ></div>
-        </div>
+        {/*The X button goes to last route in history (-1). TODO: go to parent Route instead */}
+        <button className="me-2" onClick={() => navigate(-1)}>
+          X
+        </button>
+        <ProgressBar count={count}></ProgressBar>
         <p className="fw-bold m-2" style={{ color: "red" }}>
           ❤️ {lives}
         </p>
       </div>
-      {/* <button className="mb-3" onClick={() => playIntervalSample()}> */}
-      {/* <button className="mb-3" onClick={() => playInterval(nota, interval)}> */}
       <button
         className="mb-3 fw-b"
-        onClick={() => handlePlay(notes, intervals, setNota, setInterval)}
+        onClick={() =>
+          handlePlay(
+            notes,
+            intervals,
+            setNota,
+            setInterval,
+            instruments.filter((e) => e.selected)[0].name
+          )
+        }
       >
-        Play interval
+        {`Play ${type.slice(0, -1)}`}
       </button>
       <div>
         {intervals.map((e, index) => (
           <button
-            style={
-              {
-                // backgroundColor: "#444",
-              }
-            }
             className="m-2"
             onClick={() =>
               handleResponse(interval[1], e, lives, setLives, count, setCount)

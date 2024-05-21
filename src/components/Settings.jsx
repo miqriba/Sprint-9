@@ -1,26 +1,33 @@
-import { React, useContext, useEffect } from "react";
+import { React, useContext, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { MainContext } from "../context/context";
 
 function Settings() {
-  const { instruments } = useContext(MainContext);
+  const { instruments, setInstruments } = useContext(MainContext);
+
+  function handleSelect(selectedInstrumentName) {
+    const updatedInstruments = instruments.map((instrument) => {
+      return instrument.name === selectedInstrumentName
+        ? { ...instrument, selected: true }
+        : { ...instrument, selected: false };
+    });
+    setInstruments(updatedInstruments);
+  }
 
   return (
-    <div style={{ color: "white" }}>
+    <div>
       <h3>Settings</h3>
+      <p>Instrument audio select</p>
       <Dropdown>
         <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-          {`${instruments.filter((sam) => sam.selected === true)[0].text}`}
+          {`${instruments.filter((e) => e.selected === true)[0].text}`}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
           {instruments
             .filter((e) => e.selected !== true)
             .map((e, index) => (
-              <Dropdown.Item
-                onClick={() => console.log(e.text + " clicked")}
-                key={index}
-              >
+              <Dropdown.Item onClick={() => handleSelect(e.name)} key={index}>
                 {e.text}
               </Dropdown.Item>
             ))}
