@@ -4,43 +4,26 @@ import ProgressBar from "./ProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
 
 function Exercise() {
-  const {
-    notes,
-    exercises,
-    intervalsAll,
-    handleResponse,
-    playIntervalSample,
-    handlePlay,
-    instruments,
-  } = useContext(MainContext);
-
+  const { createExerciseSet, handleResponse, handlePlay, instruments } =
+    useContext(MainContext);
   const navigate = useNavigate();
+
   const { type, exercise } = useParams();
 
+  const [possibleResponses, setPossibleResponses] = useState([]);
+  const [currentExerciseSet, setCurrentExerciseSet] = useState([]);
+
   useEffect(() => {
-    const currentExercise = exercises[type].find((e) => e.title == exercise);
-    console.log(currentExercise);
+    const [responses, set] = createExerciseSet(type, exercise);
+    setPossibleResponses(responses);
+    setCurrentExerciseSet(set);
   }, [type, exercise]);
 
   // Counter for which question of the X total (10)
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
 
   // Number of lives left
   const [lives, setLives] = useState(3);
-
-  const intervals = intervalsAll.slice(0, 13);
-
-  const [nota, setNota] = useState(null);
-  const [interval, setInterval] = useState(null);
-
-  // Here we create the list of 10 concrete exercises based on 'type' and 'exercise' called currentExerciseSet
-
-  useEffect(() => {
-    const currentExerciseSet = [];
-    for (let i = 0; i < 10; i++) {
-      // Here we define which exercise we are doing: slice(0, 3) would be unison, m2, M2, slice none would be all intervals
-    }
-  }, []);
 
   return (
     <div>
@@ -49,7 +32,7 @@ function Exercise() {
         <button className="me-2" onClick={() => navigate(-1)}>
           X
         </button>
-        <ProgressBar count={count}></ProgressBar>
+        <ProgressBar count={count + 1}></ProgressBar>
         <p className="fw-bold m-2" style={{ color: "red" }}>
           ❤️ {lives}
         </p>
@@ -58,10 +41,8 @@ function Exercise() {
         className="mb-3 fw-b"
         onClick={() =>
           handlePlay(
-            notes,
-            intervals,
-            setNota,
-            setInterval,
+            currentExerciseSet,
+            count,
             instruments.filter((e) => e.selected)[0].name
           )
         }
@@ -69,14 +50,21 @@ function Exercise() {
         {`Play ${type.slice(0, -1)}`}
       </button>
       <div>
-        {intervals.map((e, index) => (
+        {possibleResponses.map((e, index) => (
           <button
             className="m-2"
             onClick={() =>
-              handleResponse(interval[1], e, lives, setLives, count, setCount)
+              handleResponse(
+                currentExerciseSet[count][1][1],
+                e,
+                lives,
+                setLives,
+                count,
+                setCount
+              )
             }
             key={e}
-          >{`${e}`}</button>
+          >{`${e[1]}`}</button>
         ))}
       </div>
     </div>

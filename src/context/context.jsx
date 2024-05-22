@@ -1,12 +1,10 @@
 import * as Tone from "tone";
 import { createContext, useEffect, useState } from "react";
 import {
+  data,
   urlsSamples,
   notes,
   exercises,
-  intervalsAll,
-  chordsAll,
-  scalesAll,
   instrumentsInit,
 } from "../data/data";
 
@@ -25,7 +23,7 @@ function MainContextProvider({ children }) {
     <MainContext.Provider
       value={{
         notes,
-        intervalsAll,
+        createExerciseSet,
         exercises,
         instrumentsInit,
         instruments,
@@ -52,23 +50,42 @@ function getRandom(set, setToAvoid = 0) {
   const position = Math.floor(Math.random() * (set.length - setToAvoid));
   return [position, set[position]];
 }
-
+// Here we create the list of 10 concrete exercises based on 'type' and 'exercise' called currentExerciseSet
+// 1.1. Check if it's an interval, chord, or scale (parameter)
 // 1. Generate array of exercises with random generated exercises.
 //  TODO: At least one of every solution in the exercise
-// 2. Only pass to next exercise with correct solution
 // 1. Generates random interval, chord, or scale according to limits
-// 1. Check if it's an interval, chord, or scale (parameter)
-// 3.
+
+// TODO: Only works for intervals
+function createExerciseSet(type, exercise) {
+  const currentExercise = exercises[type].find((e) => e.title == exercise);
+  let currentExerciseSet = [];
+  let intervals = data[type]
+    .map((e, index) =>
+      currentExercise.set.includes(index) ? [index, e] : null
+    )
+    .filter((item) => item !== null);
+
+  if (type == "intervals") {
+    for (let i = 0; i < 10; i++) {
+      let interval = getRandom(intervals);
+      // console.log("Interval: " + interval[1]);
+      let nota = getRandom(notes, interval[0]);
+      // console.log(`Notes: ${nota[1]} ${notes[nota[0] + interval[0]]}`);
+      currentExerciseSet.push([nota, interval]);
+    }
+    console.log(currentExerciseSet);
+  }
+  return [intervals, currentExerciseSet];
+}
 
 // Generates new random notes and intervals from the defined lists
-function handlePlay(notes, intervals, setNota, setInterval, instrument) {
-  let interval = getRandom(intervals);
+function handlePlay(currentExerciseSet, count, instrument) {
+  const [nota, interval] = currentExerciseSet[count];
+  console.log(nota, interval);
   console.log("Interval: " + interval[1]);
-  setInterval(interval);
-  let nota = getRandom(notes, interval[0]);
   console.log(`Notes: ${nota[1]} ${notes[nota[0] + interval[0]]}`);
-  setNota(nota);
-  // playInterval(nota, interval);
+
   playInterval(nota, interval, instrument);
 }
 
@@ -104,10 +121,9 @@ function playIntervalSample(nota, interval, instrument) {
 function handleResponse(solucio, resposta, lives, setLives, count, setCount) {
   if (solucio === resposta) {
     console.log("correcte!");
+    setCount(count + 1);
   } else {
     setLives(lives - 1);
     console.log("incorrecte");
   }
-  setCount(count + 1);
-  console.log(count);
 }

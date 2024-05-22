@@ -47,6 +47,7 @@ export const notes = [
 ];
 
 export const data = {
+  // Array position of intervals coincides with semitone distance: Major third = 4 semitones
   intervals: [
     "Unison",
     "Minor Second",
@@ -87,48 +88,6 @@ export const data = {
   ],
 };
 
-// Array position of intervals coincides with semitone distance: Major third = 4 semitones
-export const intervalsAll = [
-  "Unison",
-  "Minor Second",
-  "Major Second",
-  "Minor Third",
-  "Major Third",
-  "Perfect Fourth",
-  "Tritone",
-  "Perfect Fifth",
-  "Minor Sixth",
-  "Major Sixth",
-  "Minor Seventh",
-  "Major Seventh",
-  "Octave",
-];
-
-export const chordsAll = [
-  "Major",
-  "Minor",
-  "Augmented",
-  "Diminished",
-  "Major 7",
-  "Dominant 7",
-  "Minor 7",
-  "Minor 7(b5)",
-  "Diminished 7",
-];
-
-export const scalesAll = [
-  "Major",
-  "Natural Minor (Aeolian)",
-  "Dorian",
-  "Phrygian",
-  "Lydian",
-  "Mixolydian",
-  "Locrian",
-  "Whole-Tone",
-  "Diminished H-W",
-  "Diminished W-H",
-];
-
 export const instrumentsInit = [
   { text: "Piano", name: "piano", selected: true },
   { text: "Electric Bass", name: "bassElectric", selected: false },
@@ -138,31 +97,37 @@ export const instrumentsInit = [
 //TODO : update set parameter so it can select single values: chords: major and augmented: 0, 2
 export const exercises = {
   intervals: [
-    { set: [0, 3], title: "Unison and seconds", direction: "ascending" },
-    { set: [3, 5], title: "Thirds", direction: "ascending" },
+    { set: [0, 1, 2], title: "Unison and seconds", direction: "ascending" },
+    { set: [3, 4], title: "Thirds", direction: "ascending" },
     {
-      set: [0, 5],
+      set: [0, 1, 2, 3, 4],
       title: "Unison, seconds and thirds",
       direction: "ascending",
     },
+    { set: [6, 8], title: "Tritone, minor sixth", direction: "ascending" },
   ],
+  // passar set a unitats concretes, no intervals
   chords: [
-    { set: [0, 3], title: "Major and Minor", direction: "harmonic" },
+    { set: [0, 1], title: "Major and Minor", direction: "harmonic" },
     {
-      set: [0, 4],
+      set: [0, 1, 2, 3],
       title: "Major, Minor, Augmented and Diminished",
       direction: "harmonic",
     },
-    { set: [4, 6], title: "Major 7, Dolminant 7", direction: "harmonic" },
+    { set: [4, 5], title: "Major 7, Dolminant 7", direction: "harmonic" },
   ],
   scales: [
-    { set: [0, 3], title: "Major and Minor", direction: "ascending" },
+    { set: [0, 1], title: "Major and Minor", direction: "ascending" },
     {
-      set: [3, 5],
+      set: [0, 1, 2, 5],
       title: "Major, Minor, Dorian, Mixolydian",
       direction: "ascending",
     },
-    { set: [0, 5], title: "All major modes", direction: "ascending" },
+    {
+      set: [0, 1, 2, 3, 4, 5, 6],
+      title: "All major modes",
+      direction: "ascending",
+    },
   ],
 };
 
