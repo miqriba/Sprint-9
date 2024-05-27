@@ -1,17 +1,38 @@
 import { React, useContext, useState, useEffect } from "react";
 import { MainContext } from "../context/context";
 import ProgressBar from "./ProgressBar";
+import FeedbackModal from "./FeedbackModal";
 import { useNavigate, useParams } from "react-router-dom";
 
+//TODO: ADD AUDIO FEEDBACK
 function Exercise() {
-  const { createExerciseSet, handleResponse, handlePlay, instruments } =
-    useContext(MainContext);
+  const {
+    createExerciseSet,
+    handleResponse,
+    handlePlay,
+    instruments,
+    handleNext,
+  } = useContext(MainContext);
+
   const navigate = useNavigate();
 
   const { type, exercise } = useParams();
 
+  // Counter for which question of the X total (10)
+  const [count, setCount] = useState(0);
+
   const [possibleResponses, setPossibleResponses] = useState([]);
   const [currentExerciseSet, setCurrentExerciseSet] = useState([]);
+
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedback, setFeedback] = useState({});
+
+  function showModal() {
+    setShowFeedback(true);
+  }
+  function hideModal() {
+    setShowFeedback(false);
+  }
 
   useEffect(() => {
     const [responses, set] = createExerciseSet(type, exercise);
@@ -19,23 +40,25 @@ function Exercise() {
     setCurrentExerciseSet(set);
   }, [type, exercise]);
 
-  // Counter for which question of the X total (10)
-  const [count, setCount] = useState(0);
-
   // Number of lives left
-  const [lives, setLives] = useState(3);
+  // const [lives, setLives] = useState(3);
 
   return (
     <div>
-      <div className="d-flex align-items-center mb-5">
+      <div className="d-flex flex-column align-items-start mb-5">
         {/*The X button goes to last route in history (-1). TODO: go to parent Route instead */}
-        <button className="me-2" onClick={() => navigate(-1)}>
+        <button
+          // style={{ position: "fixed", left: "50px" }}
+          className="me-2 mb-3"
+          onClick={() => navigate(-1)}
+        >
           X
         </button>
+        <p>{`Exercise ${count + 1}/10`}</p>
         <ProgressBar count={count + 1}></ProgressBar>
-        <p className="fw-bold m-2" style={{ color: "red" }}>
+        {/* <p className="fw-bold m-2" style={{ color: "red" }}>
           ❤️ {lives}
-        </p>
+        </p> */}
       </div>
       <button
         className="mb-3 fw-b"
@@ -56,17 +79,25 @@ function Exercise() {
             onClick={() =>
               handleResponse(
                 currentExerciseSet[count][1][1],
-                e,
-                lives,
-                setLives,
-                count,
-                setCount
+                e[1],
+                setFeedback,
+                showModal
               )
             }
             key={e}
           >{`${e[1]}`}</button>
         ))}
       </div>
+      <FeedbackModal
+        feedback={feedback}
+        showFeedback={showFeedback}
+        handleClose={hideModal}
+        handleNext={handleNext}
+        count={count}
+        setCount={setCount}
+      >
+        <p>Modal</p>
+      </FeedbackModal>
     </div>
   );
 }

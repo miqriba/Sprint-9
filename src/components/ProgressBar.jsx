@@ -6,7 +6,7 @@ function ProgressBar({ count }) {
       <div
         style={{
           border: "solid 1px black",
-          width: "85%",
+          width: "100%",
           borderRadius: "3px",
         }}
         className="progress"

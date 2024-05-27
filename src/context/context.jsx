@@ -31,6 +31,7 @@ function MainContextProvider({ children }) {
         getRandom,
         handleResponse,
         handlePlay,
+        handleNext,
       }}
     >
       {children}
@@ -44,12 +45,14 @@ export { MainContextProvider, MainContext };
 // Selects a random interval from a set intervals as strings
 // @param set: set of notes to choose from
 // @param setToAvoid: size of the interval, so we don't pick a 1st note which 2nd note isnt in the list of notes
+// @param clean: determines if the position of the element is included as the first item in the array
 
 // @returns [position, element in array]
-function getRandom(set, setToAvoid = 0) {
+function getRandom(set, setToAvoid = 0, clean = false) {
   const position = Math.floor(Math.random() * (set.length - setToAvoid));
-  return [position, set[position]];
+  return clean ? set[position] : [position, set[position]];
 }
+
 // Here we create the list of 10 concrete exercises based on 'type' and 'exercise' called currentExerciseSet
 // 1.1. Check if it's an interval, chord, or scale (parameter)
 // 1. Generate array of exercises with random generated exercises.
@@ -60,15 +63,18 @@ function getRandom(set, setToAvoid = 0) {
 function createExerciseSet(type, exercise) {
   const currentExercise = exercises[type].find((e) => e.title == exercise);
   let currentExerciseSet = [];
+
   let intervals = data[type]
     .map((e, index) =>
       currentExercise.set.includes(index) ? [index, e] : null
     )
     .filter((item) => item !== null);
 
+  console.log(intervals);
+
   if (type == "intervals") {
     for (let i = 0; i < 10; i++) {
-      let interval = getRandom(intervals);
+      let interval = getRandom(intervals, 0, true);
       // console.log("Interval: " + interval[1]);
       let nota = getRandom(notes, interval[0]);
       // console.log(`Notes: ${nota[1]} ${notes[nota[0] + interval[0]]}`);
@@ -77,6 +83,34 @@ function createExerciseSet(type, exercise) {
     console.log(currentExerciseSet);
   }
   return [intervals, currentExerciseSet];
+}
+
+function handleResponse(solucio, resposta, setFeedback, showModal) {
+  // Show feedback modal with feedback message
+  showModal();
+
+  if (solucio == resposta) {
+    let result = { correct: true, solution: solucio };
+    // setResults(...results, result);
+    setFeedback(result);
+    console.log("correcte!");
+    // setCount(count + 1);
+  } else {
+    let result = { correct: false, solution: solucio };
+    // setResults(...results, result);
+    setFeedback(result);
+
+    // setLives(lives - 1);
+    console.log("incorrecte");
+  }
+}
+
+function handleNext(count, setCount) {
+  if (count <= 8) {
+    setCount(count + 1);
+  } else {
+    console.log("Fi de l'exercici");
+  }
 }
 
 // Generates new random notes and intervals from the defined lists
@@ -116,14 +150,4 @@ function playIntervalSample(nota, interval, instrument) {
     sampler.triggerAttackRelease(nota[1], "2n", now);
     sampler.triggerAttackRelease(notes[nota[0] + interval[0]], "2n", now + 1);
   });
-}
-
-function handleResponse(solucio, resposta, lives, setLives, count, setCount) {
-  if (solucio === resposta) {
-    console.log("correcte!");
-    setCount(count + 1);
-  } else {
-    setLives(lives - 1);
-    console.log("incorrecte");
-  }
 }

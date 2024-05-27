@@ -105,6 +105,11 @@ export const exercises = {
       direction: "ascending",
     },
     { set: [6, 8], title: "Tritone, minor sixth", direction: "ascending" },
+    {
+      set: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      title: "All intervals",
+      direction: "ascending",
+    },
   ],
   // passar set a unitats concretes, no intervals
   chords: [
