@@ -11,17 +11,15 @@ function SelectExercise() {
   const selectedExercises = exercises[type] || [];
 
   return (
-    <div>
+    <div className="p-4 background d-flex flex-column justify-content-center">
       <button
         style={{ position: "fixed", left: "30px", top: "150px" }}
-        className="me-2"
+        className="me-2 accent"
         onClick={() => navigate(-1)}
       >
         {`<`}
       </button>
-      <h3>
-        Select Exercise for {type.charAt(0).toUpperCase() + type.slice(1)}
-      </h3>
+      <h3>{type.charAt(0).toUpperCase() + type.slice(1)}</h3>
 
       <div className="d-flex flex-column">
         {selectedExercises.map((e, index) => (

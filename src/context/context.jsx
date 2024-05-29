@@ -6,6 +6,7 @@ import {
   notes,
   exercises,
   instrumentsInit,
+  initialResults,
 } from "../data/data";
 
 const MainContext = createContext(undefined);
@@ -18,6 +19,9 @@ function MainContextProvider({ children }) {
   }, []);
 
   const [instruments, setInstruments] = useState(instrumentsInit);
+  const [isNavBarVisible, setIsNavBarVisible] = useState(true);
+
+  const [results, setResults] = useState(initialResults);
 
   return (
     <MainContext.Provider
@@ -32,6 +36,13 @@ function MainContextProvider({ children }) {
         handleResponse,
         handlePlay,
         handleNext,
+        isNavBarVisible,
+        setIsNavBarVisible,
+        getStatsForGivenSolution,
+        results,
+        setResults,
+        getStats,
+        getWeakestInterval,
       }}
     >
       {children}
@@ -54,12 +65,9 @@ function getRandom(set, setToAvoid = 0, clean = false) {
 }
 
 // Here we create the list of 10 concrete exercises based on 'type' and 'exercise' called currentExerciseSet
-// 1.1. Check if it's an interval, chord, or scale (parameter)
-// 1. Generate array of exercises with random generated exercises.
 //  TODO: At least one of every solution in the exercise
-// 1. Generates random interval, chord, or scale according to limits
-
 // TODO: Only works for intervals
+
 function createExerciseSet(type, exercise) {
   const currentExercise = exercises[type].find((e) => e.title == exercise);
   let currentExerciseSet = [];
@@ -69,8 +77,6 @@ function createExerciseSet(type, exercise) {
       currentExercise.set.includes(index) ? [index, e] : null
     )
     .filter((item) => item !== null);
-
-  console.log(intervals);
 
   if (type == "intervals") {
     for (let i = 0; i < 10; i++) {
@@ -85,38 +91,93 @@ function createExerciseSet(type, exercise) {
   return [intervals, currentExerciseSet];
 }
 
-function handleResponse(solucio, resposta, setFeedback, showModal) {
+function handleResponse(
+  solucio,
+  resposta,
+  setFeedback,
+  showModal,
+  results,
+  setResults
+) {
   // Show feedback modal with feedback message
   showModal();
-
+  let result;
+  let temporaryResults = results;
   if (solucio == resposta) {
-    let result = { correct: true, solution: solucio };
-    // setResults(...results, result);
-    setFeedback(result);
-    console.log("correcte!");
-    // setCount(count + 1);
+    result = { correct: true, solution: solucio };
+    // console.log("correcte!");
   } else {
-    let result = { correct: false, solution: solucio };
-    // setResults(...results, result);
-    setFeedback(result);
-
-    // setLives(lives - 1);
-    console.log("incorrecte");
+    result = { correct: false, solution: solucio };
+    // console.log("incorrecte");
   }
+  temporaryResults.push(result);
+  setFeedback(result);
+  setResults(temporaryResults);
+  // console.log(results);
 }
 
 function handleNext(count, setCount) {
-  if (count <= 8) {
-    setCount(count + 1);
-  } else {
-    console.log("Fi de l'exercici");
-  }
+  setCount(count + 1);
+  // console.log(count + 1);
 }
+
+// ---- STATISTICS ----
+
+// Statistics based on which interval (givenSolution)
+//
+//@return totalAnswers: number of instances for a given Solution (maybe the random creation of the exercise created 0 instances)
+//@return correctAnswers: number of correct answers for the given solution.
+//@return percentage: percentage of correct answers
+function getStatsForGivenSolution(results, givenSolution) {
+  let totalAns = results.filter((e) => e.solution == givenSolution).length;
+  // console.log(`Total answers: ${totalAns}`);
+  let correctAns;
+  let percent;
+  if (totalAns < 1) {
+    correctAns = 0;
+    percent = null;
+  } else {
+    correctAns = results
+      .filter((e) => e.solution == givenSolution)
+      .reduce((a, b) => (b.correct ? a + 1 : a), 0);
+    // console.log(`Right responses: ${correctAns}`);
+    percent = Math.round((correctAns * 100) / totalAns);
+  }
+  return {
+    totalAnswers: totalAns,
+    correctAnswers: correctAns,
+    percentage: percent,
+  };
+}
+
+function getStats(results) {
+  const totalAnswers = results.length;
+  const correctAnswers = results.filter((e) => e.correct).length;
+  const percentage = Math.round((correctAnswers * 100) / totalAnswers);
+
+  return percentage;
+}
+
+function getStatistics(results) {
+  const statistics = data.intervals.map((e) => ({
+    interval: e,
+    percentage: getStatsForGivenSolution(results, e).percentage,
+  }));
+  return statistics;
+}
+
+function getWeakestInterval(results) {
+  return getStatistics(results)
+    .filter((e) => e.percentage != null)
+    .reduce((prev, curr) => (prev.percentage < curr.percentage ? prev : curr));
+}
+
+// ---- TONE JS PLAY AUDIO SAMPLES ----
 
 // Generates new random notes and intervals from the defined lists
 function handlePlay(currentExerciseSet, count, instrument) {
   const [nota, interval] = currentExerciseSet[count];
-  console.log(nota, interval);
+  // console.log(nota, interval);
   console.log("Interval: " + interval[1]);
   console.log(`Notes: ${nota[1]} ${notes[nota[0] + interval[0]]}`);
 

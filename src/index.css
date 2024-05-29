@@ -1,177 +1,11 @@
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url("https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&display=swap");
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.radio-canada-big-font {
+  font-family: "Radio Canada Big", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
 }
-
-body {
-  padding: 0 2rem;
-  background-color: #181818;
-  color: white;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button,
-.but {
-  border-radius: 3px;
-  background-color: #222;
-
-  border: 1px solid #f9f9f9;
-  box-shadow: 2px 2px #888;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button.navButton {
-  background-color: #f9f9f9;
-  color: black;
-}
-button.close {
-  font-weight: bold;
-  background-color: #181818;
-  border: none;
-  box-shadow: none;
-}
-
-button:active {
-  translate: 2px 2px;
-  box-shadow: none;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-.progress {
-  background-color: #213547;
-}
-.navbar {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-}
-
-.modal {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  top: auto;
-  width: 100%;
-  height: 25%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  transition: transform 0.3s ease-in-out;
-  z-index: 1;
-}
-
-.modal-content {
-  height: 100%;
-  text-align: center;
-  color: white;
-  background-color: #ffffff00;
-}
-
-.display-block {
-  display: flex;
-}
-
-.display-none {
-  display: none;
-}
-
-.modal-backdrop {
-  background-color: #ffffff00;
-}
-.modal {
-  background-color: #ffffff00;
-}
-.correct {
-  background-color: #292929;
-}
-.wrong {
-  background-color: #292929;
-}
-.correctText {
-  color: #58cc02;
-}
-.wrongText {
-  color: #ff4b4a;
-}
-.correctBut {
-  color: #292929;
-  border: none;
-  box-shadow: none;
-  background-color: #58cc02;
-}
-.wrongBut {
-  color: #292929;
-  border: none;
-  box-shadow: none;
-  background-color: #ff4b4a;
-}
-
-LIGHT THEME  
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  body,
-  .but {
-    color: black;
-    background-color: white;
-  }
-
-  button,
-  .but {
-    border-color: #000;
-    box-shadow: 3px 3px #000;
-    background-color: #f9f9f9;
-  }
-  .correctBut,
-  .wrongBut {
-    color: white;
-  }
-
-  .correct {
-    background-color: #d7ffb8;
-  }
-  .wrong {
-    background-color: #ffdfe0;
-  }
-
-  .progress {
-    background-color: white;
-  }
-} */
 
 :root {
   --color-scheme: light dark;
@@ -188,12 +22,14 @@ LIGHT THEME
   --wrong-background-color: #292929;
   --correct-text-color: #58cc02;
   --wrong-text-color: #ff4b4a;
-  --correct-button-color: #58cc02;
-  --wrong-button-color: #ff4b4a;
+  --correct-color: #58cc02;
+  --mediocre-color: #dacb00;
+  --wrong-color: #ff4b4a;
 }
 
 body {
-  padding: 0 2rem;
+  /* padding: 0 2rem; */
+  padding: 0;
   background-color: var(--body-background-color);
   color: var(--button-text-color);
   width: 100%;
@@ -203,6 +39,11 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+
+  font-family: "Radio Canada Big", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
 }
 
 h1 {
@@ -224,11 +65,6 @@ button,
   cursor: pointer;
   transition: border-color 0.25s;
 }
-
-/* button.navButton {
-  background-color: #f9f9f9;
-  color: black;
-} */
 
 button.close {
   font-weight: bold;
@@ -271,11 +107,23 @@ button:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   transition: transform 0.3s ease-in-out;
-  z-index: 1;
+  z-index: 2;
   background-color: var(--modal-background-color);
+  border-top: solid 1px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #00000000;
+  z-index: 1;
 }
 
 .modal-content {
@@ -298,10 +146,12 @@ button:focus-visible {
 
 .correct {
   background-color: var(--correct-background-color);
+  border-color: var(--correct-text-color);
 }
 
 .wrong {
   background-color: var(--wrong-background-color);
+  border-color: var(--wrong-text-color);
 }
 
 .correctText {
@@ -312,25 +162,63 @@ button:focus-visible {
   color: var(--wrong-text-color);
 }
 
+.correctColor {
+  color: var(--correct-color);
+}
+.mediocreColor {
+  color: var(--mediocre-color);
+}
+.wrongColor {
+  color: var(--wrong-color);
+}
+
 .correctBut {
   color: var(--correct-background-color);
   border: none;
   box-shadow: none;
-  background-color: var(--correct-button-color);
+  background-color: var(--correct-text-color);
 }
 
 .wrongBut {
   color: var(--wrong-background-color);
   border: none;
   box-shadow: none;
-  background-color: var(--wrong-button-color);
+  background-color: var(--wrong-text-color);
+}
+.background {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+.background::before {
+  z-index: -1; /* Ensure it stays behind the content */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(src/assets/Backgrounds/10.png);
+  background-size: 450px;
+  filter: var(--filter-invert);
+}
+
+.base {
+  background-color: var(--body-background-color);
+  border: 1px solid var(--button-border-color);
+  border-radius: 3px;
+}
+.accent {
+  background-color: var(--accent-background-color);
 }
 
 /* LIGHT THEME */
 [data-theme="light"] {
   --text-color: #213547;
-  --background-color: #ffffff;
-  --body-background-color: #ffffff;
+  --background-color: #fff;
+  --body-background-color: #fff;
+  --body-background-color: #fff;
   --button-background-color: #f9f9f9;
   --button-text-color: black;
   --button-border-color: #000;
@@ -338,24 +226,38 @@ button:focus-visible {
   --navbar-background-color: white;
   --modal-background-color: #ffffff00;
   --correct-background-color: #d7ffb8;
+  --correct-background-color: #dcfcc4;
   --wrong-background-color: #ffdfe0;
-  --correct-text-color: #58cc02;
-  --wrong-text-color: #ff4b4a;
+
+  /* non duolingo colors */
+  --correct-text-color: #000100c4;
+  --wrong-text-color: #000100c4;
+
+  --accent-color: #aa75ff;
+  --accent-background-color: #e4d3ff;
+  /* --accent-background-color: #d5bcfc; */
+  /* --accent-background-color: #e7fcbc; */
+  /* --accent-background-color: #fff3b7; */
+
+  --filter-invert: brightness(95%);
 }
 
 /* DARK THEME */
 [data-theme="dark"] {
-  --text-color: rgba(255, 255, 255, 0.87);
+  --text-color: #eee;
   --background-color: #242424;
   --body-background-color: #181818;
+  /* --body-background-color: #181818; */
   --button-background-color: #222;
-  --button-text-color: white;
-  --button-border-color: #f9f9f9;
-  --button-shadow-color: #888;
+  --button-text-color: #eee;
+  --button-border-color: #999;
+  --button-shadow-color: none;
   --navbar-background-color: #213547;
   --modal-background-color: #ffffff00;
   --correct-background-color: #292929;
   --wrong-background-color: #292929;
-  --correct-text-color: #58cc02;
-  --wrong-text-color: #ff4b4a;
+
+  --accent-color: #4c376b;
+  --accent-background-color: #4c376b;
+  --filter-invert: invert(1) brightness(120%);
 }

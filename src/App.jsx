@@ -5,10 +5,11 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { React } from "react";
 import { MainContextProvider } from "./context/context.jsx";
-import Home from "./components/Home";
+// import Home from "./components/Home";
 import Exercise from "./components/Exercise";
 import SelectExercise from "./components/SelectExercise";
 import SelectType from "./components/SelectType.jsx";
+import Stats from "./components/Stats.jsx";
 import Settings from "./components/Settings";
 import NavBar from "./components/NavBar";
 import ThemeProvider from "./components/ThemeContext.jsx";
@@ -23,10 +24,11 @@ function App() {
         >
           <MainContextProvider>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<SelectType />} />
               <Route path="/exercises" element={<SelectType />} />
               <Route path="/exercises/:type" element={<SelectExercise />} />
               <Route path="/exercises/:type/:exercise" element={<Exercise />} />
+              <Route path="/stats" element={<Stats />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
             <NavBar />

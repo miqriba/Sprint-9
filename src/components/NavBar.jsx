@@ -1,36 +1,39 @@
-import React from "react";
+import { React, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { MainContext } from "../context/context";
 
 function NavBar() {
   const navigate = useNavigate();
 
+  const { isNavBarVisible } = useContext(MainContext);
+
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isNavBarVisible ? "" : "display-none"}`}>
       <div className="container-fluid " style={{ whiteSpace: "no-wrap" }}>
-        <button
+        {/* <button
           className="d-flex flex-column align-items-center navButton"
           onClick={() => navigate("/")}
           style={{ border: "none", boxShadow: "none" }}
         >
           <i className="bi bi-house-door fs-2"></i>
           Home
-        </button>
+        </button> */}
         <button
           className="d-flex flex-column align-items-center navButton"
           onClick={() => navigate("/exercises")}
           style={{ border: "none", boxShadow: "none" }}
         >
           <i className="bi bi-book fs-2"></i>
-          Exercises
+          Practice
         </button>
-        {/* <button
+        <button
           className="d-flex flex-column align-items-center navButton"
-          // onClick={() => navigate("/stats")}
+          onClick={() => navigate("/stats")}
           style={{ border: "none", boxShadow: "none" }}
         >
           <i className="bi bi-bar-chart fs-2"></i>
           Statistics
-        </button> */}
+        </button>
         <button
           className="d-flex flex-column align-items-center navButton"
           onClick={() => navigate("/settings")}

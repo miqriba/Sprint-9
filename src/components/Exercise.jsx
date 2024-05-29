@@ -3,6 +3,7 @@ import { MainContext } from "../context/context";
 import ProgressBar from "./ProgressBar";
 import FeedbackModal from "./FeedbackModal";
 import { useNavigate, useParams } from "react-router-dom";
+import Summary from "./Summary";
 
 //TODO: ADD AUDIO FEEDBACK
 function Exercise() {
@@ -12,6 +13,9 @@ function Exercise() {
     handlePlay,
     instruments,
     handleNext,
+    setIsNavBarVisible,
+    results,
+    setResults,
   } = useContext(MainContext);
 
   const navigate = useNavigate();
@@ -35,69 +39,86 @@ function Exercise() {
   }
 
   useEffect(() => {
+    setIsNavBarVisible(false);
+    return () => setIsNavBarVisible(true);
+  }, [setIsNavBarVisible]);
+
+  useEffect(() => {
     const [responses, set] = createExerciseSet(type, exercise);
     setPossibleResponses(responses);
     setCurrentExerciseSet(set);
   }, [type, exercise]);
 
-  // Number of lives left
-  // const [lives, setLives] = useState(3);
+  if (count >= 10) {
+    return <Summary results={results} possibleResponses={possibleResponses} />;
+  }
 
   return (
-    <div>
-      <div className="d-flex flex-column align-items-start mb-5">
-        {/*The X button goes to last route in history (-1). TODO: go to parent Route instead */}
-        <button
-          // style={{ position: "fixed", left: "50px" }}
-          className="me-2 mb-3"
-          onClick={() => navigate(-1)}
-        >
-          X
-        </button>
-        <p>{`Exercise ${count + 1}/10`}</p>
-        <ProgressBar count={count + 1}></ProgressBar>
-        {/* <p className="fw-bold m-2" style={{ color: "red" }}>
+    <div className="background d-flex flex-column justify-content-center">
+      <div className="p-4 mb-5 base pt-5 pb-5">
+        <div className="d-flex flex-column align-items-start mb-5">
+          {/*The X button goes to last route in history (-1). TODO: go to parent Route instead */}
+          <button
+            // style={{ position: "fixed", left: "50px" }}
+            className="me-2 mb-3"
+            onClick={() => navigate(-1)}
+          >
+            X
+          </button>
+          <p>{`Exercise ${count + 1}/10`}</p>
+          <ProgressBar count={count + 1}></ProgressBar>
+          {/* <p className="fw-bold m-2" style={{ color: "red" }}>
           ❤️ {lives}
         </p> */}
-      </div>
-      <button
-        className="mb-3 fw-b"
-        onClick={() =>
-          handlePlay(
-            currentExerciseSet,
-            count,
-            instruments.filter((e) => e.selected)[0].name
-          )
-        }
-      >
-        {`Play ${type.slice(0, -1)}`}
-      </button>
-      <div>
-        {possibleResponses.map((e, index) => (
+        </div>
+        <div
+          className="d-flex flex-row justify-content-center"
+          style={{ height: "20%" }}
+        >
           <button
-            className="m-2"
+            className="mb-3 accent d-flex flex-row align-items-center justify-content-center"
+            style={{ height: "fit-content" }}
             onClick={() =>
-              handleResponse(
-                currentExerciseSet[count][1][1],
-                e[1],
-                setFeedback,
-                showModal
+              handlePlay(
+                currentExerciseSet,
+                count,
+                instruments.filter((e) => e.selected)[0].name
               )
             }
-            key={e}
-          >{`${e[1]}`}</button>
-        ))}
+          >
+            <i className="bi-volume-up-fill fs-2 me-2"></i>
+            {`Play ${type.slice(0, -1)}`}
+          </button>
+        </div>
+        <div>
+          {possibleResponses.map((e, index) => (
+            <button
+              className="m-2"
+              onClick={() =>
+                handleResponse(
+                  currentExerciseSet[count][1][1],
+                  e[1],
+                  setFeedback,
+                  showModal,
+                  results,
+                  setResults
+                )
+              }
+              key={e}
+            >{`${e[1]}`}</button>
+          ))}
+        </div>
+        <FeedbackModal
+          feedback={feedback}
+          showFeedback={showFeedback}
+          handleClose={hideModal}
+          handleNext={handleNext}
+          count={count}
+          setCount={setCount}
+        >
+          <p>Modal</p>
+        </FeedbackModal>
       </div>
-      <FeedbackModal
-        feedback={feedback}
-        showFeedback={showFeedback}
-        handleClose={hideModal}
-        handleNext={handleNext}
-        count={count}
-        setCount={setCount}
-      >
-        <p>Modal</p>
-      </FeedbackModal>
     </div>
   );
 }
